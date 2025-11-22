@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Order{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Create Order</h1>
+        <p class="text-muted mb-0">Fill out the order information and items below.</p>
+    </div>
+    <a href="{% url 'manage_orders' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Back</a>
+</div>
+
+<form method="post" novalidate>
+    {% csrf_token %}
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light fw-semibold">Order Details</div>
+                <div class="card-body">
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}{% if field.field.required %}<span class="text-danger">*</span>{% endif %}</label>
+                            {{ field }}
+                            {% if field.help_text %}<small class="text-muted d-block">{{ field.help_text }}</small>{% endif %}
+                            {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light fw-semibold d-flex justify-content-between align-items-center">
+                    <span>Order Items</span>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="add-item-row">Add Item</button>
+                </div>
+                <div class="card-body">
+                    {{ formset.management_form }}
+                    <div id="items-formset">
+                        {% for form in formset %}
+                            <div class="border rounded p-3 mb-3 item-form">
+                                <div class="row g-3">
+                                    <div class="col-md-5">
+                                        <label class="form-label">{{ form.product.label }}</label>
+                                        {{ form.product }}
+                                        {% for error in form.product.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ form.quantity.label }}</label>
+                                        {{ form.quantity }}
+                                        {% for error in form.quantity.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">{{ form.price.label }}</label>
+                                        {{ form.price }}
+                                        {% for error in form.price.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                                    </div>
+                                    <div class="col-md-1 text-end">
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-item">&times;</button>
+                                    </div>
+                                </div>
+                                {{ form.id }}
+                                {% if form.DELETE %}{{ form.DELETE }}{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <template id="empty-form-template">
+                        <div class="border rounded p-3 mb-3 item-form">
+                            <div class="row g-3">
+                                <div class="col-md-5">
+                                    <label class="form-label">{{ formset.empty_form.product.label }}</label>
+                                    {{ formset.empty_form.product }}
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">{{ formset.empty_form.quantity.label }}</label>
+                                    {{ formset.empty_form.quantity }}
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">{{ formset.empty_form.price.label }}</label>
+                                    {{ formset.empty_form.price }}
+                                </div>
+                                <div class="col-md-1 text-end">
+                                    <button type="button" class="btn btn-outline-danger btn-sm remove-item">&times;</button>
+                                </div>
+                            </div>
+                            {{ formset.empty_form.DELETE }}
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <button type="submit" class="btn btn-primary">Save Order</button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const addButton = document.getElementById('add-item-row');
+        const formsetContainer = document.getElementById('items-formset');
+        const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+        const emptyFormTemplate = document.getElementById('empty-form-template').content.firstElementChild;
+
+        addButton.addEventListener('click', function () {
+            const newForm = emptyFormTemplate.cloneNode(true);
+            const formIndex = parseInt(totalForms.value, 10);
+            newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, formIndex);
+            totalForms.value = formIndex + 1;
+            formsetContainer.appendChild(newForm);
+        });
+
+        formsetContainer.addEventListener('click', function (event) {
+            if (event.target.classList.contains('remove-item')) {
+                const itemForm = event.target.closest('.item-form');
+                if (itemForm) {
+                    const deleteInput = itemForm.querySelector('input[id$="-DELETE"]');
+                    if (deleteInput) {
+                        deleteInput.checked = true;
+                        itemForm.classList.add('d-none');
+                    } else {
+                        itemForm.remove();
+                        totalForms.value = parseInt(totalForms.value, 10) - 1;
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

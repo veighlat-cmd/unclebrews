@@ -1,0 +1,56 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="dashboard-container" style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;">
+
+  <!-- Left side: Apps overview -->
+  <div style="flex: 2; min-width: 600px;">
+      {% for app in app_list %}
+          <div class="module" style="background: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; padding: 15px;">
+              <h3 style="margin-bottom: 10px; color: #444;">{{ app.name }}</h3>
+              <table class="table" style="width: 100%;">
+                  <thead>
+                      <tr>
+                          <th>{% trans 'Model' %}</th>
+                          <th>{% trans 'Add' %}</th>
+                          <th>{% trans 'Change' %}</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for model in app.models %}
+                          <tr>
+                              <td><a href="{{ model.admin_url }}">{{ model.name }}</a></td>
+                              <td>{% if model.add_url %}<a href="{{ model.add_url }}">Add</a>{% endif %}</td>
+                              <td>{% if model.change_url %}<a href="{{ model.change_url }}">Change</a>{% endif %}</td>
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      {% endfor %}
+  </div>
+
+  <!-- Right side: Recent actions -->
+  <div style="flex: 1; min-width: 300px;">
+      <div class="module" style="background: #fff; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 15px;">
+          <h3>{% trans 'Recent actions' %}</h3>
+          {% load log %}
+          {% get_admin_log 10 as admin_log %}
+          {% if not admin_log %}
+              <p>{% trans 'None available' %}</p>
+          {% else %}
+              <ul style="list-style: none; padding: 0;">
+                  {% for entry in admin_log %}
+                      <li style="border-bottom: 1px solid #eee; padding: 8px 0;">
+                          {{ entry.action_time|date:"N j, Y, P" }} — 
+                          <strong>{{ entry.object_repr }}</strong>
+                      </li>
+                  {% endfor %}
+              </ul>
+          {% endif %}
+      </div>
+  </div>
+
+</div>
+{% endblock %}

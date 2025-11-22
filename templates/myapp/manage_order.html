@@ -1,0 +1,96 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block title %}Manage Order {{ order.order_code }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <!-- Page Header -->
+    <h2 class="mb-4 display-6 fw-bold text-center text-brown">
+        Manage Order <span class="text-dark">{{ order.order_code }}</span>
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="card shadow-sm p-4 mb-4 border-0" style="border-radius: 15px; background: #ff8c00;">
+            
+            <h5 class="mb-3 fw-bold text-brown">Order Details</h5>
+            
+            <!-- Form fields -->
+            <div class="mb-3">
+                {{ form.as_p }}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-brown btn-lg shadow-sm text-white">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="{% url 'manage_orders' %}" class="btn btn-secondary btn-lg shadow-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    body {
+        background: linear-gradient(135deg, #ffc107 0%, #ffc107 100%);
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .text-brown {
+        color: #080708 !important;
+    }
+
+    h2.display-6 {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .card {
+        transition: all 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(92, 51, 23, 0.25);
+    }
+
+    .btn-brown {
+        background-color: #7b7977;
+        border-color: #7b7977;
+    }
+
+    .btn-brown:hover {
+        background-color: #7A482A;
+        border-color: #7A482A;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(92, 51, 23, 0.3);
+    }
+
+    .btn-lg {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.2s ease;
+    }
+
+    label {
+        font-weight: 500;
+        color: #080708;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 0.5rem 0.75rem;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+        border-color: #5C3317;
+        box-shadow: 0 0 5px rgba(92, 51, 23, 0.3);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manage Orders{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h1 class="h3 mb-1 page-title">Orders Admin</h1>
+        <p class="text-light mb-0">Monitor, search, and maintain customer orders.</p>
+    </div>
+    <div class="btn-group">
+        <a href="{% url 'manage_order_add' %}" class="btn btn-accent">
+            <i class="fas fa-plus me-1"></i>Add Order
+        </a>
+    </div>
+</div>
+
+<div class="card custom-card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                <label for="search" class="form-label text-dark fw-semibold">Search Orders</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fas fa-search"></i></span>
+                    <input type="text" id="search" name="q" value="{{ query }}" class="form-control"
+                        placeholder="Order code, customer name, or username" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="status" class="form-label text-dark fw-semibold">Status</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="">All statuses</option>
+                    {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if value == status_filter %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-light w-100 border-white">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card custom-card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Order Code</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Total</th>
+                    <th>Created</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in page_obj %}
+                <tr>
+                    <td class="fw-semibold">
+                        {{ order.order_code }} —
+                        <span class="text-muted">{{ order.product_summary }}</span>
+                    </td>
+                    <td>
+                        {{ order.customer.user.get_full_name|default:order.customer.user.username }}<br>
+                        <small class="text-muted">@{{ order.customer.user.username }}</small>
+                    </td>
+                    <td>
+                        <span class="badge status-badge status-{{ order.status }}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="small text-muted">{{ order.payment_method|default:"—" }}</div>
+                        <span class="badge status-badge status-{{ order.payment_status }}">
+                            {{ order.get_payment_status_display|default:order.payment_status|capfirst }}
+                        </span>
+                    </td>
+                    <td>₱{{ order.total_amount|floatformat:2 }}</td>
+                    <td>{{ order.created_at|date:'M d, Y H:i' }}</td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a href="{% url 'manage_order_detail' order.order_id %}" class="btn btn-outline-dark">View</a>
+                            <a href="{% url 'manage_order_edit' order.order_id %}" class="btn btn-accent">Edit</a>
+                            <a href="{% url 'manage_order_delete' order.order_id %}" class="btn btn-danger">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">No orders found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="card-footer bg-white">
+        <nav aria-label="Order pagination">
+            <ul class="pagination justify-content-end mb-0">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?q={{ query }}&status={{ status_filter }}&page={{ page_obj.previous_page_number }}">
+                        Previous
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?q={{ query }}&status={{ status_filter }}&page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?q={{ query }}&status={{ status_filter }}&page={{ page_obj.next_page_number }}">
+                        Next
+                    </a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    /* Full page background */
+    body {
+        background: linear-gradient(135deg, #ffc107 0%, #ffc108 100%) !important;
+        background-attachment: fixed;
+        color: #df4b4b;
+    }
+
+    /* Card styling */
+    .custom-card {
+        border-radius: 14px;
+        border: none;
+    }
+
+    .table th {
+        background: #fff !important;
+    }
+
+    /* Orange accent buttons */
+    .btn-accent {
+        background-color: #ff8c00;
+        color: #fff;
+        border: none;
+    }
+    .btn-accent:hover {
+        background-color: #e57a00;
+        color: white;
+    }
+
+    /* Status badges */
+    .status-badge {
+        text-transform: capitalize;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+    }
+    .status-pending {background:#ffe0b3;color:#8a5200;}
+    .status-confirmed {background:#ffe6ff;color:#660066;}
+    .status-preparing {background:#cce5ff;color:#004085;}
+    .status-ready {background:#d4edda;color:#155724;}
+    .status-delivered {background:#e2e3e5;color:#383d41;}
+    .status-cancelled {background:#f8d7da;color:#721c24;}
+
+    .page-title {
+        color: #fff;
+        font-weight: 700;
+    }
+</style>
+
+{% endblock %}

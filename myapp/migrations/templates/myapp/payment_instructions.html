@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment Instructions - {{ instructions.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Order Summary Card -->
+            <div class="card shadow-lg mb-4 border-0">
+                <div class="card-header text-white text-center py-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h2 class="mb-0">
+                        <i class="fas fa-credit-card me-2"></i>
+                        Payment Instructions
+                    </h2>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Payment Method Header -->
+                    <div class="text-center mb-4">
+                        <div class="payment-method-icon mb-3" style="color: {{ instructions.color }}">
+                            <i class="{{ instructions.icon }} fa-3x"></i>
+                        </div>
+                        <h3 class="text-primary">{{ instructions.title }}</h3>
+                        <p class="text-muted">Please follow the steps below to complete your payment</p>
+                    </div>
+
+                    <!-- Order Details -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card bg-light border-0">
+                                <div class="card-body text-center">
+                                    <h6 class="text-muted mb-2">Order ID</h6>
+                                    <h5 class="text-primary mb-0">{{ order.order_id }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light border-0">
+                                <div class="card-body text-center">
+                                    <h6 class="text-muted mb-2">Total Amount</h6>
+                                    <h5 class="text-success mb-0">₱{{ order.total_amount }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Steps -->
+                    <div class="payment-steps mb-4">
+                        <h5 class="text-center mb-3">Payment Steps</h5>
+                        {% for step in instructions.steps %}
+                        <div class="step-item d-flex align-items-start mb-3">
+                            <div class="step-number me-3">
+                                <span class="badge bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                                    {{ forloop.counter }}
+                                </span>
+                            </div>
+                            <div class="step-content">
+                                <p class="mb-0">{{ step }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Important Notes -->
+                    <div class="alert alert-info border-0">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Important Notes
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Please include your Order ID as reference when making the payment</li>
+                            <li>Keep a screenshot or proof of payment for verification</li>
+                            <li>Payment verification may take 1-2 business hours</li>
+                            <li>Your order will be processed once payment is confirmed</li>
+                        </ul>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-4">
+                        <a href="{% url 'order_detail' order.order_id %}" class="btn btn-outline-primary me-2" style="border-color: #667eea; color: #667eea;">
+                            <i class="fas fa-eye me-2"></i>
+                            View Order Details
+                        </a>
+                        <a href="{% url 'home' %}" class="btn btn-primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                            <i class="fas fa-home me-2"></i>
+                            Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Support -->
+            <div class="card shadow border-0">
+                <div class="card-body text-center p-4">
+                    <h6 class="text-muted mb-2">Need Help?</h6>
+                    <p class="mb-2">If you encounter any issues with payment, please contact us:</p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <i class="fas fa-phone text-primary me-2"></i>
+                            <span>+63 917 123 4567</span>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fas fa-envelope text-primary me-2"></i>
+                            <span>support@unclebrews.com</span>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="fas fa-clock text-primary me-2"></i>
+                            <span>24/7 Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .payment-method-icon {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    .step-item {
+        transition: transform 0.2s ease;
+    }
+    
+    .step-item:hover {
+        transform: translateX(5px);
+    }
+    
+    .step-number .badge {
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .alert {
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+    }
+    
+    .btn {
+        border-radius: 25px;
+        padding: 10px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: transparent;
+        color: white;
+    }
+    
+    .text-primary {
+        color: #667eea !important;
+    }
+    
+    .text-success {
+        color: #ff6b6b !important;
+    }
+</style>
+{% endblock %}

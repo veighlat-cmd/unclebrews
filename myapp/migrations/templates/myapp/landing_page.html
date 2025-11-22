@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Uncle Brews - Online Ordering</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #ffc107 !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        /* More specific selector to ensure yellow color */
+        .hero-content .hero-title {
+            color: #ffc107 !important;
+        }
+        
+        /* Even more specific */
+        body .hero-section .hero-content .hero-title {
+            color: #ffc107 !important;
+        }
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem 0;
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .btn-custom {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .btn-outline-custom {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        .btn-outline-custom:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+        .coffee-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        /* Hero Logo Styling */
+        .hero-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-circle {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #ffc107 0%, #ff8c00 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+        
+        .logo-circle i {
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+        }
+        
+        .logo-tagline {
+            font-size: 1.1rem;
+            color: #ffc107;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            50% { transform: translateY(-5px) rotate(0deg); }
+            75% { transform: translateY(-15px) rotate(-2deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-logo mb-4">
+                <div class="logo-circle">
+                    <i class="fas fa-coffee fa-3x"></i>
+                </div>
+                <h2 class="logo-text">Uncle Brews</h2>
+                <p class="logo-tagline">Premium Coffee & Beverages</p>
+            </div>
+            
+            <h1 class="hero-title">Welcome to Uncle Brews</h1>
+            <p class="hero-subtitle">Discover our amazing selection of coffee and beverages. Order online and enjoy!</p>
+            
+            <div class="mb-4">
+                <a href="{% url 'login' %}" class="btn btn-custom">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+                <a href="{% url 'register' %}" class="btn btn-outline-custom">
+                    <i class="fas fa-user-plus"></i> Register
+                </a>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-shopping-cart fa-2x mb-3"></i>
+                    <h4>Easy Ordering</h4>
+                    <p>Browse our menu and place orders with just a few clicks</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-clock fa-2x mb-3"></i>
+                    <h4>Quick Service</h4>
+                    <p>Fast preparation and pickup for your convenience</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-star fa-2x mb-3"></i>
+                    <h4>Quality Products</h4>
+                    <p>Premium coffee and beverages made with care</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-truck fa-2x mb-3"></i>
+                    <h4>Order Tracking</h4>
+                    <p>Track your orders from preparation to pickup</p>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <p class="mb-0">
+                    <i class="fas fa-lock"></i> Secure login required to access our ordering system
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

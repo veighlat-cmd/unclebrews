@@ -1,0 +1,543 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Uncle Brews{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section position-relative overflow-hidden">
+    <div class="hero-bg"></div>
+    <div class="container position-relative">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6 text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInUp">
+                    Welcome to <span class="text-warning">Uncle Brews</span>
+                </h1>
+                <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-1s">
+                    Experience the perfect blend of tradition and innovation. 
+                    From classic coffee to trendy beverages, we've got your cravings covered!
+                </p>
+                <div class="animate__animated animate__fadeInUp animate__delay-2s">
+                    <a href="#menu" class="btn btn-warning btn-lg me-3">
+                        <i class="fas fa-coffee"></i> Explore Menu
+                    </a>
+                    <a href="{% url 'product_list' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-shopping-cart"></i> Order Now
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center animate__animated animate__fadeInRight">
+                <div class="hero-image">
+                    <i class="fas fa-coffee fa-10x text-warning opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card p-4">
+                    <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+                    <h4>Quick Service</h4>
+                    <p>Fast preparation and pickup for your convenience</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card p-4">
+                    <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                    <h4>Premium Quality</h4>
+                    <p>Only the finest ingredients for the best taste</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card p-4">
+                    <i class="fas fa-heart fa-3x text-danger mb-3"></i>
+                    <h4>Made with Love</h4>
+                    <p>Every drink crafted with passion and care</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Menu Section -->
+<section id="menu" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-4 fw-bold">Our Menu</h2>
+            <p class="lead text-muted">Discover our amazing selection of beverages</p>
+        </div>
+
+        <!-- Iced Coffee Section -->
+        <div class="menu-section mb-5">
+            <h3 class="section-title">
+                <i class="fas fa-snowflake text-info"></i> Iced Coffee Collection
+            </h3>
+            <p class="section-subtitle">7 refreshing flavors to cool you down</p>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=200&fit=crop" class="card-img-top" alt="Iced Americano">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Iced Americano</h5>
+                            <p class="card-text text-muted">Smooth espresso over ice</p>
+                            <div class="price-tag">
+                                <span class="price">₱59</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=200&fit=crop" class="card-img-top" alt="Iced Latte">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Iced Latte</h5>
+                            <p class="card-text text-muted">Creamy espresso with milk</p>
+                            <div class="price-tag">
+                                <span class="price">₱59</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=200&fit=crop" class="card-img-top" alt="Iced Mocha">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Iced Mocha</h5>
+                            <p class="card-text text-muted">Chocolate and coffee blend</p>
+                            <div class="price-tag">
+                                <span class="price">₱59</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=200&fit=crop" class="card-img-top" alt="Iced Caramel">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Iced Caramel</h5>
+                            <p class="card-text text-muted">Sweet caramel delight</p>
+                            <div class="price-tag">
+                                <span class="price">₱59</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frappuccino Section -->
+        <div class="menu-section mb-5">
+            <h3 class="section-title">
+                <i class="fas fa-blender text-success"></i> Frappuccino Collection
+            </h3>
+            <p class="section-subtitle">5 blended delights for the ultimate treat</p>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=200&fit=crop" class="card-img-top" alt="Mocha Frappuccino">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Mocha Frappuccino</h5>
+                            <p class="card-text text-muted">Chocolate coffee blend</p>
+                            <div class="price-tag">
+                                <span class="price">₱69</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=200&fit=crop" class="card-img-top" alt="Caramel Frappuccino">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Caramel Frappuccino</h5>
+                            <p class="card-text text-muted">Sweet caramel blend</p>
+                            <div class="price-tag">
+                                <span class="price">₱69</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=200&fit=crop" class="card-img-top" alt="Vanilla Frappuccino">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Vanilla Frappuccino</h5>
+                            <p class="card-text text-muted">Classic vanilla flavor</p>
+                            <div class="price-tag">
+                                <span class="price">₱69</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=200&fit=crop" class="card-img-top" alt="Strawberry Frappuccino">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Strawberry Frappuccino</h5>
+                            <p class="card-text text-muted">Fruity strawberry blend</p>
+                            <div class="price-tag">
+                                <span class="price">₱69</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signature Latte Section -->
+        <div class="menu-section mb-5">
+            <h3 class="section-title">
+                <i class="fas fa-crown text-warning"></i> Signature Latte Collection
+            </h3>
+            <p class="section-subtitle">8 unique flavors crafted with love</p>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=200&fit=crop" class="card-img-top" alt="Classic Latte">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Classic Latte</h5>
+                            <p class="card-text text-muted">Smooth espresso with milk</p>
+                            <div class="price-tag">
+                                <span class="price">₱49</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=200&fit=crop" class="card-img-top" alt="Hazelnut Latte">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Hazelnut Latte</h5>
+                            <p class="card-text text-muted">Rich hazelnut flavor</p>
+                            <div class="price-tag">
+                                <span class="price">₱49</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=200&fit=crop" class="card-img-top" alt="Vanilla Latte">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Vanilla Latte</h5>
+                            <p class="card-text text-muted">Sweet vanilla essence</p>
+                            <div class="price-tag">
+                                <span class="price">₱49</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=200&fit=crop" class="card-img-top" alt="Cinnamon Latte">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Cinnamon Latte</h5>
+                            <p class="card-text text-muted">Warm cinnamon spice</p>
+                            <div class="price-tag">
+                                <span class="price">₱49</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frappe Section -->
+        <div class="menu-section mb-5">
+            <h3 class="section-title">
+                <i class="fas fa-ice-cream text-info"></i> Frappe Collection
+            </h3>
+            <p class="section-subtitle">7 chilled delights for hot days</p>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=200&fit=crop" class="card-img-top" alt="Coffee Frappe">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Coffee Frappe</h5>
+                            <p class="card-text text-muted">Classic coffee blend</p>
+                            <div class="price-tag">
+                                <span class="price">₱59</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=200&fit=crop" class="card-img-top" alt="Mocha Frappe">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Mocha Frappe</h5>
+                            <p class="card-text text-muted">Chocolate coffee mix</p>
+                            <div class="price-tag">
+                                <span class="price">₱59</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=200&fit=crop" class="card-img-top" alt="Caramel Frappe">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Caramel Frappe</h5>
+                            <p class="card-text text-muted">Sweet caramel blend</p>
+                            <div class="price-tag">
+                                <span class="price">₱59</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=200&fit=crop" class="card-img-top" alt="Vanilla Frappe">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Vanilla Frappe</h5>
+                            <p class="card-text text-muted">Smooth vanilla flavor</p>
+                            <div class="price-tag">
+                                <span class="price">₱59</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Milk Tea Section -->
+        <div class="menu-section mb-5">
+            <h3 class="section-title">
+                <i class="fas fa-mug-hot text-primary"></i> Milk Tea Collection
+            </h3>
+            <p class="section-subtitle">Classic milk tea in three sizes</p>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=200&fit=crop" class="card-img-top" alt="Milk Tea Small">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Milk Tea - Small</h5>
+                            <p class="card-text text-muted">Perfect for a quick treat</p>
+                            <div class="price-tag">
+                                <span class="price">₱39</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&h=200&fit=crop" class="card-img-top" alt="Milk Tea Medium">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Milk Tea - Medium</h5>
+                            <p class="card-text text-muted">Just the right amount</p>
+                            <div class="price-tag">
+                                <span class="price">₱49</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="product-card card h-100 shadow-sm">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300&h=200&fit=crop" class="card-img-top" alt="Milk Tea Large">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Milk Tea - Large</h5>
+                            <p class="card-text text-muted">For the ultimate satisfaction</p>
+                            <div class="price-tag">
+                                <span class="price">₱59</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-warning text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Order?</h2>
+        <p class="lead mb-4">Join thousands of satisfied customers who love our beverages!</p>
+        <a href="{% url 'product_list' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-shopping-cart"></i> Start Ordering Now
+        </a>
+    </div>
+</section>
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+}
+
+.hero-image {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.feature-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+}
+
+.menu-section {
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    color: #333;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.product-card {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important;
+}
+
+.product-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.1);
+}
+
+.price-tag {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 25px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.price {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.animate__animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+.animate__fadeInUp {
+    animation-name: fadeInUp;
+}
+
+.animate__fadeInRight {
+    animation-name: fadeInRight;
+}
+
+.animate__delay-1s {
+    animation-delay: 0.5s;
+}
+
+.animate__delay-2s {
+    animation-delay: 1s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translate3d(100%, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+</style>
+{% endblock %}

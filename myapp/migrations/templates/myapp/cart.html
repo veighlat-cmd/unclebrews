@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}Shopping Cart - Uncle Brews{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-shopping-cart fa-2x text-primary me-3"></i>
+                <h2 class="mb-0">Shopping Cart</h2>
+            </div>
+            <p class="text-muted">Review your selected items before checkout</p>
+        </div>
+    </div>
+
+{% if cart_items %}
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-gradient-primary text-white">
+            <h4 class="mb-0">
+                <i class="fas fa-list me-2"></i>Cart Items
+            </h4>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="border-0">Product</th>
+                            <th class="border-0 text-center">Price</th>
+                            <th class="border-0 text-center">Quantity</th>
+                            <th class="border-0 text-center">Subtotal</th>
+                            <th class="border-0 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr class="cart-item-row">
+                            <td class="border-0">
+                                <div class="d-flex align-items-center">
+                                    <div class="cart-product-image me-3">
+                                        {% if item.product.image_url %}
+                                            <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" 
+                                                 class="img-fluid rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                        {% elif item.product.image %}
+                                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                                 class="img-fluid rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                                 style="width: 60px; height: 60px;">
+                                                <i class="fas fa-coffee fa-lg text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">{{ item.product.name }}</h6>
+                                        <small class="text-muted">{{ item.product.category.name }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="border-0 text-center">
+                                <span class="fw-bold text-primary">₱{{ item.price }}</span>
+                            </td>
+                            <td class="border-0 text-center">
+                                <div class="quantity-control">
+                                    <input type="number" min="1" value="{{ item.quantity }}" 
+                                           class="form-control form-control-sm text-center" 
+                                           style="width: 80px;" 
+                                           onchange="updateQuantity({{ item.product.id }}, this.value)">
+                                </div>
+                            </td>
+                            <td class="border-0 text-center">
+                                <span class="fw-bold text-success">₱{{ item.subtotal }}</span>
+                            </td>
+                            <td class="border-0 text-center">
+                                <a href="{% url 'remove_from_cart' item.product.id %}" 
+                                   class="btn btn-outline-danger btn-sm" 
+                                   onclick="return confirm('Remove this item from cart?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <a href="{% url 'product_list' %}" class="btn btn-outline-primary btn-lg" style="border-color: #667eea; color: #667eea;">
+                <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+            </a>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-light border-0">
+                <div class="card-body text-center">
+                    <h4 class="text-success mb-3">Total: ₱{{ total }}</h4>
+                    <a href="{% url 'checkout' %}" class="btn btn-success btn-lg w-100" style="background: linear-gradient(45deg, #ff6b6b, #ee5a24); border: none;">
+                        <i class="fas fa-credit-card me-2"></i> Proceed to Checkout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-shopping-cart fa-5x text-muted"></i>
+        </div>
+        <h3 class="text-muted mb-3">Your cart is empty</h3>
+        <p class="text-muted mb-4">Add some delicious coffee to your cart to get started!</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+            <i class="fas fa-coffee me-2"></i> Browse Products
+        </a>
+    </div>
+{% endif %}
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    border: none;
+}
+
+.cart-item-row:hover {
+    background-color: #f8f9fa;
+}
+
+.cart-product-image img {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.cart-product-image img:hover {
+    transform: scale(1.05);
+}
+
+.quantity-control input {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.2s ease;
+}
+
+.quantity-control input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25);
+}
+
+.table th {
+    font-weight: 600;
+    color: #495057;
+}
+
+.btn {
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+    color: white;
+}
+
+.text-primary {
+    color: #667eea !important;
+}
+
+.text-success {
+    color: #ff6b6b !important;
+}
+
+.card {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateQuantity(productId, quantity) {
+    if (quantity < 1) {
+        alert('Quantity must be at least 1');
+        return;
+    }
+    
+    fetch(`/update-cart/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: `quantity=${quantity}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error updating quantity');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating quantity');
+    });
+}
+</script>
+{% endblock %}

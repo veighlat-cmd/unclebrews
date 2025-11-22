@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Details - Uncle Brews{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-receipt fa-2x text-primary me-3"></i>
+                <h2 class="mb-0">Order Details</h2>
+            </div>
+            <p class="text-muted">Order #{{ order.order_id }}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-md-12 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Order Information
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="info-section">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-calendar-alt me-2"></i>Order Details
+                                </h5>
+                                <div class="mb-3">
+                                    <span class="text-muted">Date:</span>
+                                    <strong class="ms-2">{{ order.created_at|date:"M d, Y H:i" }}</strong>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted">Status:</span>
+                                    <span class="badge fs-6 px-3 py-2 ms-2 {% if order.status == 'pending' %}bg-warning text-dark{% elif order.status == 'confirmed' %}bg-info{% elif order.status == 'preparing' %}bg-primary{% elif order.status == 'ready' %}bg-success{% elif order.status == 'delivered' %}bg-secondary{% else %}bg-danger{% endif %}">
+                                        <i class="fas fa-{% if order.status == 'pending' %}clock{% elif order.status == 'confirmed' %}check-circle{% elif order.status == 'preparing' %}coffee{% elif order.status == 'ready' %}check-double{% elif order.status == 'delivered' %}truck{% else %}exclamation{% endif %} me-1"></i>
+                                        {{ order.get_status_display }}
+                                    </span>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted">Total:</span>
+                                    <strong class="ms-2 text-success fs-5">₱{{ order.total_amount }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-section">
+                                <h5 class="text-primary mb-3">
+                                    <i class="fas fa-user me-2"></i>Customer Information
+                                </h5>
+                                <div class="mb-3">
+                                    <span class="text-muted">Name:</span>
+                                    <strong class="ms-2">{{ order.customer.user.first_name }} {{ order.customer.user.last_name }}</strong>
+                                </div>
+                                <div class="mb-3">
+                                    <span class="text-muted">Email:</span>
+                                    <strong class="ms-2">{{ order.customer.user.email }}</strong>
+                                </div>
+                                {% if order.customer.phone %}
+                                    <div class="mb-3">
+                                        <span class="text-muted">Phone:</span>
+                                        <strong class="ms-2">{{ order.customer.phone }}</strong>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h5 class="text-primary mb-3">
+                        <i class="fas fa-shopping-bag me-2"></i>Order Items
+                    </h5>
+                    <div class="order-items">
+                        {% for item in order.items.all %}
+                        <div class="order-item-card mb-3 p-3 border rounded">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 col-4 mb-2 mb-md-0">
+                                    {% if item.product.image_url %}
+                                        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" 
+                                             class="img-fluid rounded product-image" style="width: 80px; height: 80px; object-fit: cover;">
+                                    {% elif item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                             class="img-fluid rounded product-image" style="width: 80px; height: 80px; object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                             style="width: 80px; height: 80px;">
+                                            <i class="fas fa-coffee fa-2x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 col-8 mb-2 mb-md-0">
+                                    <h6 class="mb-1 fw-bold">{{ item.product.name }}</h6>
+                                    <small class="text-muted">{{ item.product.category.name }}</small>
+                                </div>
+                                <div class="col-md-2 col-4 text-center mb-2 mb-md-0">
+                                    <span class="text-muted">Price:</span>
+                                    <div class="fw-bold text-primary">₱{{ item.price }}</div>
+                                </div>
+                                <div class="col-md-2 col-4 text-center mb-2 mb-md-0">
+                                    <span class="text-muted">Qty:</span>
+                                    <div class="fw-bold">{{ item.quantity }}</div>
+                                </div>
+                                <div class="col-md-2 col-4 text-center mb-2 mb-md-0">
+                                    <span class="text-muted">Subtotal:</span>
+                                    <div class="fw-bold text-success">₱{{ item.subtotal }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if order.notes %}
+                        <div class="mt-4 p-3 bg-light rounded">
+                            <h6 class="text-primary mb-2">
+                                <i class="fas fa-sticky-note me-2"></i>Special Instructions
+                            </h6>
+                            <p class="mb-0">{{ order.notes }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-12">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-header bg-gradient-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calculator me-2"></i>Order Summary
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="summary-item d-flex justify-content-between mb-3">
+                        <span class="text-muted">Order ID:</span>
+                        <strong>{{ order.order_id }}</strong>
+                    </div>
+                    <div class="summary-item d-flex justify-content-between mb-3">
+                        <span class="text-muted">Items:</span>
+                        <strong>{{ order.items.count }}</strong>
+                    </div>
+                    <hr>
+                    <div class="summary-item d-flex justify-content-between mb-3">
+                        <span class="fw-bold fs-5">Total:</span>
+                        <span class="fw-bold fs-5 text-success">₱{{ order.total_amount }}</span>
+                    </div>
+                    <hr>
+                    <a href="{% url 'order_list' %}" class="btn btn-outline-secondary w-100 mb-2">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Orders
+                    </a>
+                    <a href="{% url 'product_list' %}" class="btn btn-primary w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                        <i class="fas fa-shopping-cart me-2"></i>Order Again
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-gradient-success {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+}
+
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    border: none;
+}
+
+.order-item-card {
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.order-item-card:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.product-image {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.info-section {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    height: 100%;
+}
+
+.summary-item {
+    padding: 8px 0;
+}
+
+.sticky-top {
+    z-index: 1020;
+}
+
+.badge {
+    border-radius: 20px;
+}
+
+.text-primary {
+    color: #667eea !important;
+}
+
+.text-success {
+    color: #ff6b6b !important;
+}
+
+.card {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+</style>
+{% endblock %}

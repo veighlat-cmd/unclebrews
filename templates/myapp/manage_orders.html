@@ -1,0 +1,105 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block title %}Manage Orders{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Page Title -->
+    <h1 class="mb-4 text-center fw-bold" 
+        style="color:#5C3317; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-shadow:1px 1px 2px rgba(0,0,0,0.1);">
+        Manage Orders
+    </h1>
+
+    <!-- Orders Table Card -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white fw-bold">
+            Orders List
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="text-center">Order list</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" class="text-end">Total</th>
+                        <th scope="col">Created</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr class="order-row">
+                        <td class="text-center">{{ order.display_name }}</td>
+                        <td>{{ order.customer.user.get_full_name }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if order.status == 'pending' %}bg-warning
+                                {% elif order.status == 'confirmed' %}bg-info
+                                {% elif order.status == 'preparing' %}bg-secondary
+                                {% elif order.status == 'ready' %}bg-success
+                                {% elif order.status == 'delivered' %}bg-dark
+                                {% elif order.status == 'cancelled' %}bg-danger
+                                {% endif %}">
+                                {{ order.status|capfirst }}
+                            </span>
+                        </td>
+                        <td class="text-end">₱{{ order.total_amount }}</td>
+                        <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                        <td>
+                            <a href="{% url 'manage_order' order.order_id %}" class="btn btn-sm btn-outline-primary">View</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-3">No orders found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    body {
+        background-color: #ffc107; /* Uncle Brews soft creamy background */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .card {
+        border-radius: 12px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(255, 167, 38, 0.1); /* subtle orange hover */
+        cursor: pointer;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.4em 0.7em;
+        border-radius: 10px;
+    }
+
+    h1 {
+        color: #5C3317;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #5C3317;
+        color: #fff;
+        border-color: #5C3317;
+        transition: all 0.2s;
+    }
+</style>
+{% endblock %}

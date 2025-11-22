@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+
+{% block title %}Shopping Cart - Uncle Brews{% endblock %}
+
+{% block content %}
+<style>
+    body {
+    background-color: #ffc107 ;
+}
+.cart-item-row {
+        transition: all 0.3s ease;
+        animation: slideInRight 0.6s ease-out;
+    }
+    
+    .cart-item-row:nth-child(1) { animation-delay: 0.1s; }
+    .cart-item-row:nth-child(2) { animation-delay: 0.2s; }
+    .cart-item-row:nth-child(3) { animation-delay: 0.3s; }
+    .cart-item-row:nth-child(4) { animation-delay: 0.4s; }
+    
+    @keyframes slideInRight {
+        from { transform: translateX(50px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .cart-item-row:hover {
+        background-color: #f8f9fa !important;
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .cart-product-image img {
+        transition: all 0.3s ease;
+    }
+    
+    .cart-product-image img:hover {
+        transform: scale(1.1) rotate(2deg);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .quantity-control input {
+        transition: all 0.3s ease;
+    }
+    
+    .quantity-control input:focus {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .total-card {
+        animation: bounceIn 0.8s ease-out;
+    }
+    
+    @keyframes bounceIn {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.05); }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .empty-cart {
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+</style>
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-shopping-cart fa-2x me-3" style="color: #ff8c00;"></i>
+
+                <h2 class="mb-0" style="color: #030202 !important;">Ordering Cart</h2>
+            </div>
+            <p class="text-muted" style="color: #0c0c0b !important;">Review your selected items before checkout</p>
+        </div>
+    </div>
+
+{% if cart_items %}
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-gradient-primary text-white">
+            <h4 class="mb-0">
+                <i class="fas fa-list me-2"></i>Cart Items
+            </h4>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="border-0">Product</th>
+                            <th class="border-0 text-center">Price</th>
+                            <th class="border-0 text-center">Quantity</th>
+                            <th class="border-0 text-center">Subtotal</th>
+                            <th class="border-0 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr class="cart-item-row">
+                            <td class="border-0">
+                                <div class="d-flex align-items-center">
+                                    <div class="cart-product-image me-3">
+                                        {% if item.product.image_url %}
+                                            <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" 
+                                                 class="img-fluid rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                        {% elif item.product.image %}
+                                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                                 class="img-fluid rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                        {% else %}
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                                 style="width: 60px; height: 60px;">
+                                                <i class="fas fa-coffee fa-lg text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1 fw-bold" style="color: #0c0c0b !important;">{{ item.product.name }}</h6>
+                                        <small class="text-muted" style="color: #080807 !important;">{{ item.product.category.name }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="border-0 text-center">
+                                <span class="fw-bold" style="color: #000000 !important;">₱{{ item.price }}</span>
+                            </td>
+                            <td class="border-0 text-center">
+                                <div class="quantity-control">
+                                    <input type="number" min="1" value="{{ item.quantity }}" 
+                                           class="form-control form-control-sm text-center" 
+                                           style="width: 80px;" 
+                                           onchange="updateQuantity('{{ item.product.id }}', this.value)">
+                                </div>
+                            </td>
+                            <td class="border-0 text-center">
+                                <span class="fw-bold" style="color: #010102 !important;">₱{{ item.subtotal }}</span>
+                            </td>
+                            <td class="border-0 text-center">
+                                <a href="{% url 'remove_from_cart' item.product.id %}" 
+                                   class="btn btn-outline-danger btn-sm" 
+                                   onclick="return confirm('Remove this item from cart?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <a href="{% url 'product_list' %}" class="btn btn-outline-primary btn-lg" style="border-color: #050505; color: #070706;">
+                <i class="fas fa-arrow-left me-2"></i> Continue Ordering
+            </a>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-light border-0 total-card">
+                <div class="card-body text-center">
+                    <h4 class="mb-3" style="color: #020202 !important;">Total: ₱{{ total }}</h4>
+                    <a href="{% url 'checkout' %}" class="btn btn-success btn-lg w-100" style="background: linear-gradient(45deg, #ffc107, #ff8c00); border: none; animation: pulse 2s infinite;">
+                        <i class="fas fa-credit-card me-2"></i> Proceed to Checkout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="text-center py-5 empty-cart">
+        <div class="mb-4">
+            <i class="fas fa-shopping-cart fa-5x text-muted" style="animation: bounce 2s infinite;"></i>
+        </div>
+        <h3 class="mb-3" style="color: #000000 !important;">Your cart is empty</h3>
+        <p class="mb-4" style="color: #080707 !important;">Add some delicious coffee to your cart to get started!</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #ff8c00 0%, #ff8c00 100%); border: none; animation: pulse 2s infinite;">
+            <i class="fas fa-coffee me-2"></i> Browse Products
+        </a>
+    </div>
+{% endif %}
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #ff8c00 0%, #ff8c00 100%);
+}
+
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    border: none;
+}
+
+.cart-item-row:hover {
+    background-color: #f8f9fa;
+}
+
+.cart-product-image img {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.cart-product-image img:hover {
+    transform: scale(1.05);
+}
+
+.quantity-control input {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.2s ease;
+}
+
+.quantity-control input:focus {
+    border-color: #66ea68;
+    box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25);
+}
+
+.table th {
+    font-weight: 600;
+    color: #495057;
+}
+
+.btn {
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #ff8c00 0%, #ff8c00 100%);
+    border-color: transparent;
+    color: white;
+}
+
+.text-primary {
+    color: #667eea !important;
+}
+
+.text-success {
+    color: #ff6b6b !important;
+}
+
+.card {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateQuantity(productId, quantity) {
+    if (quantity < 1) {
+        alert('Quantity must be at least 1');
+        return;
+    }
+    
+    fetch(`/update-cart/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: `quantity=${quantity}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error updating quantity');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating quantity');
+    });
+}
+</script>
+{% endblock %}

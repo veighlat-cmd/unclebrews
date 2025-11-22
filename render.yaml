@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: unclebrews
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn myproject.wsgi:application"
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: unclebrews-db
+          property: connectionString
+
+databases:
+  - name: unclebrews-db
+    databaseName: unclebrews
+    user: unclebrews

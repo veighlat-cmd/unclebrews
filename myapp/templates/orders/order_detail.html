@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block title %}Order {{ order.order_code }}{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Accent color */
+    :root {
+        --accent: #ff8c00;
+    }
+
+    /* Page title */
+    h1.h3 {
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+    /* Buttons */
+    .btn-primary,
+    .btn-outline-primary:hover {
+        background-color: var(--accent) !important;
+        border-color: var(--accent) !important;
+        color: white !important;
+    }
+
+    .btn-outline-primary {
+        border-color: var(--accent) !important;
+        color: var(--accent) !important;
+    }
+
+    /* Secondary button hover */
+    .btn-secondary:hover {
+        background-color: var(--accent) !important;
+        border-color: var(--accent) !important;
+    }
+
+    /* Card header styling */
+    .card-header {
+        background-color: rgba(255, 140, 0, 0.15) !important;
+        color: #cc5f00;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    /* Card shadow enhancement */
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 140, 0, 0.25);
+    }
+
+    /* Table header */
+    .table-light {
+        background-color: rgba(255, 140, 0, 0.2) !important;
+        color: #4a2e00;
+    }
+
+    /* Badges for status */
+    .badge {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+
+    .text-bg-pending { background:#ffe4b3; color:#8a5a00; }
+    .text-bg-confirmed { background:#ffd0b3; color:#7a3000; }
+    .text-bg-preparing { background:#ffce8a; color:#6d3c00; }
+    .text-bg-ready { background:#ffb866; color:#5b2f00; }
+    .text-bg-delivered { background:#d9d9d9; color:#444; }
+    .text-bg-cancelled { background:#ffb3b3; color:#7a0000; }
+</style>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h1 class="h3 mb-1">Order #{{ order.order_code }}</h1>
+        <p class="text-muted mb-0">Created {{ order.created_at|date:'M d, Y H:i' }}</p>
+    </div>
+    <div class="btn-group">
+        <a href="{% url 'manage_order_edit' order.order_id %}" class="btn btn-outline-primary">
+            <i class="fas fa-edit me-1"></i>Edit
+        </a>
+        <a href="{% url 'manage_order_delete' order.order_id %}" class="btn btn-outline-danger">
+            <i class="fas fa-trash me-1"></i>Delete
+        </a>
+        <a href="{% url 'manage_orders' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">Order Information</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Order Code</dt>
+                    <dd class="col-sm-8">{{ order.order_code }}</dd>
+
+                    <dt class="col-sm-4">Status</dt>
+                    <dd class="col-sm-8">
+                        <span class="badge text-capitalize text-bg-{{ order.status }}">{{ order.get_status_display }}</span>
+                    </dd>
+
+                    <dt class="col-sm-4">Payment Method</dt>
+                    <dd class="col-sm-8">{{ order.payment_method|default:'—' }}</dd>
+
+                    <dt class="col-sm-4">Payment Status</dt>
+                    <dd class="col-sm-8">{{ order.get_payment_status_display }}</dd>
+
+                    <dt class="col-sm-4">Preparation Time</dt>
+                    <dd class="col-sm-8">{{ order.preparation_time|default:'—' }} {% if order.preparation_time %}mins{% endif %}</dd>
+
+                    <dt class="col-sm-4">Pickup Time</dt>
+                    <dd class="col-sm-8">{{ order.pickup_time|date:'M d, Y H:i'|default:'—' }}</dd>
+
+                    <dt class="col-sm-4">Notes</dt>
+                    <dd class="col-sm-8">{{ order.notes|linebreaksbr|default:'—' }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">Customer</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Name</dt>
+                    <dd class="col-sm-8">{{ order.customer.user.get_full_name|default:order.customer.user.username }}</dd>
+
+                    <dt class="col-sm-4">Username</dt>
+                    <dd class="col-sm-8">@{{ order.customer.user.username }}</dd>
+
+                    <dt class="col-sm-4">Phone</dt>
+                    <dd class="col-sm-8">{{ order.customer.phone|default:'—' }}</dd>
+
+                    <dt class="col-sm-4">Address</dt>
+                    <dd class="col-sm-8">
+                        {{ order.customer.address|default:'—' }}<br>
+                        {{ order.customer.city }} {{ order.customer.state }} {{ order.customer.zip_code }}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header">Order Items</div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Product</th>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-end">Price</th>
+                    <th class="text-end">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td class="text-center">{{ item.quantity }}</td>
+                        <td class="text-end">₱{{ item.price|floatformat:2 }}</td>
+                        <td class="text-end">₱{{ item.subtotal|floatformat:2 }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-4 text-muted">No items found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer bg-white d-flex justify-content-end">
+        <div class="text-end">
+            <p class="mb-1 text-muted">Stored Total: ₱{{ order.total_amount|floatformat:2 }}</p>
+            <p class="mb-0 fw-semibold">Computed Total: ₱{{ computed_total|floatformat:2 }}</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
