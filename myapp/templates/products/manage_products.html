@@ -98,9 +98,11 @@
                         </span>
                     </td>
                     <td>
-                        <span class="badge status-badge status-{{ 'available' if product.is_available else 'unavailable' }}">
-                            {{ 'Available' if product.is_available else 'Unavailable' }}
-                        </span>
+                        {% if product.is_available %}
+                            <span class="badge status-badge status-available">Available</span>
+                        {% else %}
+                            <span class="badge status-badge status-unavailable">Unavailable</span>
+                        {% endif %}
                     </td>
                     <td>{{ product.id }}</td>
                     <td class="text-end">
