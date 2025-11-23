@@ -64,7 +64,7 @@
                     <th>Price</th>
                     <th>Stock</th>
                     <th>Status</th>
-                    <th>Created</th>
+                    <th>ID</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -102,7 +102,7 @@
                             {{ 'Available' if product.is_available else 'Unavailable' }}
                         </span>
                     </td>
-                    <td>{{ product.created_at|date:'M d, Y' }}</td>
+                    <td>{{ product.id }}</td>
                     <td class="text-end">
                         <div class="btn-group btn-group-sm" role="group">
                             <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-dark" target="_blank">View</a>
