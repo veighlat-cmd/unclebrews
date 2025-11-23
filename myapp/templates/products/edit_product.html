@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Product{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h1 class="h3 mb-1 page-title">Edit Product</h1>
+        <p class="text-light mb-0">Update product information for "{{ product.name }}".</p>
+    </div>
+    <div class="btn-group">
+        <a href="{% url 'manage_products' %}" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left me-1"></i>Back to Products
+        </a>
+        <a href="{% url 'manage_product_delete' product.id %}" class="btn btn-danger">
+            <i class="fas fa-trash me-1"></i>Delete
+        </a>
+    </div>
+</div>
+
+<div class="card custom-card shadow-sm">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label text-dark fw-semibold">Product Name *</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger mt-1">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label text-dark fw-semibold">Description *</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger mt-1">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.price.id_for_label }}" class="form-label text-dark fw-semibold">Price (₱) *</label>
+                                {{ form.price }}
+                                {% if form.price.errors %}
+                                    <div class="text-danger mt-1">{{ form.price.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.stock.id_for_label }}" class="form-label text-dark fw-semibold">Stock Quantity *</label>
+                                {{ form.stock }}
+                                {% if form.stock.errors %}
+                                    <div class="text-danger mt-1">{{ form.stock.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.category.id_for_label }}" class="form-label text-dark fw-semibold">Category *</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                            <div class="text-danger mt-1">{{ form.category.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form.is_available }}
+                            <label for="{{ form.is_available.id_for_label }}" class="form-check-label text-dark fw-semibold">
+                                Available for sale
+                            </label>
+                        </div>
+                        {% if form.is_available.errors %}
+                            <div class="text-danger mt-1">{{ form.is_available.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label text-dark fw-semibold">Current Image</label>
+                        <div class="mb-2">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded" style="max-height: 200px;">
+                            {% elif product.image_url %}
+                                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="img-fluid rounded" style="max-height: 200px;">
+                            {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="fas fa-image text-muted fa-3x"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.image.id_for_label }}" class="form-label text-dark fw-semibold">Replace Image</label>
+                        {{ form.image }}
+                        {% if form.image.errors %}
+                            <div class="text-danger mt-1">{{ form.image.errors }}</div>
+                        {% endif %}
+                        <small class="text-muted">Upload a new image to replace the current one</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.image_url.id_for_label }}" class="form-label text-dark fw-semibold">Or Image URL</label>
+                        {{ form.image_url }}
+                        {% if form.image_url.errors %}
+                            <div class="text-danger mt-1">{{ form.image_url.errors }}</div>
+                        {% endif %}
+                        <small class="text-muted">Provide a URL to an external image</small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading"><i class="fas fa-info-circle me-1"></i>Product Info</h6>
+                        <p class="mb-1 small"><strong>Created:</strong> {{ product.created_at|date:'M d, Y H:i' }}</p>
+                        <p class="mb-0 small"><strong>Last Updated:</strong> {{ product.updated_at|date:'M d, Y H:i' }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <a href="{% url 'manage_products' %}" class="btn btn-outline-light">Cancel</a>
+                <button type="submit" class="btn btn-accent">
+                    <i class="fas fa-save me-1"></i>Update Product
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #ffc107 0%, #ffc108 100%) !important;
+        background-attachment: fixed;
+        color: #df4b4b;
+    }
+
+    .custom-card {
+        border-radius: 14px;
+        border: none;
+    }
+
+    .btn-accent {
+        background-color: #ff8c00;
+        color: #fff;
+        border: none;
+    }
+    .btn-accent:hover {
+        background-color: #e57a00;
+        color: white;
+    }
+
+    .page-title {
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #ff8c00;
+        box-shadow: 0 0 0 0.2rem rgba(255, 140, 0, 0.25);
+    }
+</style>
+
+{% endblock %}

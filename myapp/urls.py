@@ -39,4 +39,10 @@ urlpatterns = [
     path('manage_orders/<uuid:order_id>/view/', views.order_detail, name='manage_order_detail'),
     path('manage_orders/<uuid:order_id>/edit/', views.edit_order, name='manage_order_edit'),
     path('manage_orders/<uuid:order_id>/delete/', views.delete_order, name='manage_order_delete'),
+    
+    # Staff admin product management
+    path('manage_products/', views.manage_products, name='manage_products'),
+    path('manage_products/add/', views.add_product, name='manage_product_add'),
+    path('manage_products/<int:product_id>/edit/', views.edit_product, name='manage_product_edit'),
+    path('manage_products/<int:product_id>/delete/', views.delete_product, name='manage_product_delete'),
 ]

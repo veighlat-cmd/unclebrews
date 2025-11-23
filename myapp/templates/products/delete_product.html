@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Product{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h1 class="h3 mb-1 page-title">Delete Product</h1>
+        <p class="text-light mb-0">Remove this product from your store.</p>
+    </div>
+    <div class="btn-group">
+        <a href="{% url 'manage_products' %}" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left me-1"></i>Back to Products
+        </a>
+    </div>
+</div>
+
+<div class="card custom-card shadow-sm">
+    <div class="card-body">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion</h4>
+            <p class="mb-3">Are you sure you want to delete the product "<strong>{{ product.name }}</strong>"? This action cannot be undone.</p>
+            <hr>
+            <p class="mb-0">Once deleted, all product information including images, pricing, and inventory data will be permanently removed.</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <h5 class="text-dark fw-semibold mb-3">Product Details</h5>
+                <table class="table table-borderless">
+                    <tr>
+                        <td class="text-muted fw-semibold">Name:</td>
+                        <td>{{ product.name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Category:</td>
+                        <td>{{ product.category.name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Price:</td>
+                        <td>₱{{ product.price|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Stock:</td>
+                        <td>{{ product.stock }} units</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Status:</td>
+                        <td>
+                            <span class="badge status-badge status-{{ 'available' if product.is_available else 'unavailable' }}">
+                                {{ 'Available' if product.is_available else 'Unavailable' }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted fw-semibold">Created:</td>
+                        <td>{{ product.created_at|date:'M d, Y H:i' }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <h5 class="text-dark fw-semibold mb-3">Product Image</h5>
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded" style="max-height: 200px;">
+                {% elif product.image_url %}
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="img-fluid rounded" style="max-height: 200px;">
+                {% else %}
+                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="fas fa-image text-muted fa-3x"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <form method="post" class="mt-4">
+            {% csrf_token %}
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{% url 'manage_product_edit' product.id %}" class="btn btn-outline-light">
+                    <i class="fas fa-edit me-1"></i>Cancel, Keep Product
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash me-1"></i>Delete Product Forever
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #ffc107 0%, #ffc108 100%) !important;
+        background-attachment: fixed;
+        color: #df4b4b;
+    }
+
+    .custom-card {
+        border-radius: 14px;
+        border: none;
+    }
+
+    .page-title {
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .status-badge {
+        text-transform: capitalize;
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+    }
+    .status-available {background:#d4edda;color:#155724;}
+    .status-unavailable {background:#f8d7da;color:#721c24;}
+</style>
+
+{% endblock %}

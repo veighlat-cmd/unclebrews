@@ -17,7 +17,7 @@ from django.forms import inlineformset_factory
 from .models import Category, Product, Customer, Order, OrderItem, Review, Payment
 from .forms import (
     UserRegistrationForm, CustomerProfileForm, AddToCartForm,
-    CheckoutForm, ReviewForm, ProductSearchForm, OrderAdminForm
+    CheckoutForm, ReviewForm, ProductSearchForm, OrderAdminForm, ProductAdminForm
 )
 
 import json
@@ -621,4 +621,99 @@ def delete_order(request, order_id):
         return redirect('manage_orders')
 
     return render(request, 'orders/delete_order.html', {'order': order})
+
+
+# ==============================
+# Product CRUD Admin Views
+# ==============================
+
+@staff_member_required
+def manage_products(request):
+    """Product management admin interface"""
+    products = Product.objects.all().order_by('name')
+    
+    # Search functionality
+    query = request.GET.get('q', '')
+    if query:
+        products = products.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(category__name__icontains=query)
+        )
+    
+    # Category filter
+    category_filter = request.GET.get('category', '')
+    if category_filter:
+        products = products.filter(category_id=category_filter)
+    
+    # Availability filter
+    available_filter = request.GET.get('available', '')
+    if available_filter == 'yes':
+        products = products.filter(is_available=True)
+    elif available_filter == 'no':
+        products = products.filter(is_available=False)
+    
+    # Pagination
+    paginator = Paginator(products, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Get categories for filter dropdown
+    categories = Category.objects.all()
+    
+    context = {
+        'page_obj': page_obj,
+        'query': query,
+        'category_filter': category_filter,
+        'available_filter': available_filter,
+        'categories': categories,
+    }
+    return render(request, 'products/manage_products.html', context)
+
+
+@staff_member_required
+def add_product(request):
+    """Add new product"""
+    if request.method == 'POST':
+        form = ProductAdminForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save()
+            messages.success(request, f'Product "{product.name}" added successfully!')
+            return redirect('manage_products')
+    else:
+        form = ProductAdminForm()
+    
+    return render(request, 'products/add_product.html', {'form': form})
+
+
+@staff_member_required
+def edit_product(request, product_id):
+    """Edit existing product"""
+    product = get_object_or_404(Product, id=product_id)
+    
+    if request.method == 'POST':
+        form = ProductAdminForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            product = form.save()
+            messages.success(request, f'Product "{product.name}" updated successfully!')
+            return redirect('manage_products')
+    else:
+        form = ProductAdminForm(instance=product)
+    
+    return render(request, 'products/edit_product.html', {'form': form, 'product': product})
+
+
+@staff_member_required
+@transaction.atomic
+def delete_product(request, product_id):
+    """Delete product"""
+    product = get_object_or_404(Product, id=product_id)
+    
+    if request.method == 'POST':
+        product_name = product.name
+        product.delete()
+        messages.success(request, f'Product "{product_name}" deleted successfully!')
+        return redirect('manage_products')
+    
+    return render(request, 'products/delete_product.html', {'product': product})
 

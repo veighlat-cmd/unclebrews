@@ -1,8 +1,23 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Customer, Product, Order, Review
+from .models import Customer, Product, Order, Review, Category
 from .models import Order
+
+class ProductAdminForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'description', 'price', 'category', 'stock', 'is_available', 'image', 'image_url']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'stock': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
+            'is_available': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'image_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com/image.jpg'}),
+        }
 
 class OrderProcessForm(forms.ModelForm):
     class Meta:
